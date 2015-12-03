@@ -26,16 +26,16 @@ void ofApp::setup(){
     videoFilm.setPaused(!filmPlaying);
     videoAnim.setPaused(!animPlaying);
     
-    // gui-stuff
-    playFilm.addListener(this, &ofApp::filmStarted);
-    playAnim.addListener(this, &ofApp::animStarted);
-    homeButton.addListener(this, &ofApp::homePressed);
-    
-    gui.setup();
-    
-    gui.add(playFilm.setup("play Film"));
-    gui.add(playAnim.setup("play Animation"));
-    gui.add(homeButton.setup("stop"));
+    //// gui-stuff
+    //playFilm.addListener(this, &ofApp::filmStarted);
+    //playAnim.addListener(this, &ofApp::animStarted);
+    //homeButton.addListener(this, &ofApp::homePressed);
+    //
+    //gui.setup();
+    //
+    //gui.add(playFilm.setup("play Film"));
+    //gui.add(playAnim.setup("play Animation"));
+    //gui.add(homeButton.setup("stop"));
     
     ofSetCircleResolution(100);
     

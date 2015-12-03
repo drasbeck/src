@@ -38,8 +38,8 @@ public:
     bool filmPlaying = false;
     bool animPlaying = false;
     
-    ofxPanel gui;
-    ofxButton playFilm, playAnim, homeButton;
+    //ofxPanel gui;
+    //ofxButton playFilm, playAnim, homeButton;
     
     void filmStarted();
     void animStarted();
