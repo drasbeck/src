@@ -44,6 +44,7 @@ public:
 	void oneStarted();
 	void twoStarted();
 	void homePressed();
+    void onComplete(float* arg);
 
 	string fpsStr;
 };

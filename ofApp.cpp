@@ -33,9 +33,9 @@ void ofApp::setup() {
 
 	screenHome = true;
 
-	one.setPaused(true);
-	two.setPaused(true);
-
+    one.stop();
+    two.stop();
+    
 	// home button
 	homeX = ofGetWindowWidth() - 125;
 	homeY = ofGetWindowHeight() - 125;
@@ -121,11 +121,14 @@ void ofApp::homePressed() {
     two.stop();
     
     Tweenzor::add(&yOne, yOne, 0.f - ofGetWindowHeight() / 2, 0.f, 0.5f, EASE_IN_OUT_QUINT);
+    Tweenzor::addCompleteListener(Tweenzor::getTween(&yOne), this, &ofApp::onComplete);
     Tweenzor::add(&homeAlpha, homeAlpha, 0.f, 0.f, 0.5f, EASE_IN_OUT_QUINT);
     Tweenzor::add(&playAlpha, playAlpha, 100.f, 0.f, 0.5f, EASE_IN_OUT_QUINT);
-    
-    one.setFrame(oneStill);
-	two.setFrame(twoStill);
+}
+
+void ofApp::onComplete(float* arg) {
+        two.setFrame(twoStill);
+        one.setFrame(oneStill);
 }
 
 void ofApp::exit() {
