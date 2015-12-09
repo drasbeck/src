@@ -8,9 +8,12 @@ void ofApp::setup() {
 	ofSetCircleResolution(100);
 
 	Tweenzor::init();
-
+	
+	// filmene loades, husk at tage højde for om det er VideoPlayer eller HapPlayer
 	one.loadMovie("1.mov");
 	two.loadMovie("2.mov");
+    one.setLoopState(OF_LOOP_NONE);
+    two.setLoopState(OF_LOOP_NONE);
 
 	// hvis aspekt er vigtigt
 	oneOrigAspect = one.getWidth() / one.getHeight();
@@ -18,25 +21,19 @@ void ofApp::setup() {
 
 	// sætter filmenes y-pos
 	yOne = 0 - ofGetWindowHeight() / 2;
-	yTwo = ofGetWindowHeight() / 2;
-
-	one.play();
-	one.setLoopState(OF_LOOP_NONE);
-	two.play();
-	two.setLoopState(OF_LOOP_NONE);
 
 	// filmene som still billede for brugeren.
-	oneStill = 279;
+	oneStill = 280;
 	twoStill = 265;
 	one.setFrame(oneStill);
 	two.setFrame(twoStill);
-
-	screenHome = true;
-
+	one.play();
+	two.play();
     one.stop();
     two.stop();
     
 	// home button
+	screenHome = true;
 	homeX = ofGetWindowWidth() - 125;
 	homeY = ofGetWindowHeight() - 125;
 	homeRadius = 100;
@@ -93,8 +90,6 @@ void ofApp::oneStarted() {
 	Tweenzor::add(&yOne, yOne, 0.f, 0.f, 0.5f, EASE_IN_OUT_QUINT);
 	Tweenzor::add(&homeAlpha, homeAlpha, 100.f, 0.f, 0.5f, EASE_IN_OUT_QUINT);
     
-	yTwo = ofGetWindowHeight();
-    
 	one.setFrame(0);
     two.setFrame(twoStill);
 	one.play();
@@ -117,8 +112,8 @@ void ofApp::twoStarted() {
 void ofApp::homePressed() {
 	screenHome = true;
     
-    one.stop();
-    two.stop();
+//    one.stop();
+//    two.stop();
     
     Tweenzor::add(&yOne, yOne, 0.f - ofGetWindowHeight() / 2, 0.f, 0.5f, EASE_IN_OUT_QUINT);
     Tweenzor::addCompleteListener(Tweenzor::getTween(&yOne), this, &ofApp::onComplete);
@@ -127,8 +122,13 @@ void ofApp::homePressed() {
 }
 
 void ofApp::onComplete(float* arg) {
-        two.setFrame(twoStill);
-        one.setFrame(oneStill);
+	one.setFrame(oneStill);
+//    one.play();
+	one.stop();
+	two.setFrame(twoStill);
+//	two.play();
+	two.stop();
+
 }
 
 void ofApp::exit() {
