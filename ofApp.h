@@ -32,10 +32,12 @@ public:
 	ofVideoPlayer one;
 	ofVideoPlayer two;
 
-	float xOne, yOne, xTwo, yTwo, homeAlpha, playAlpha;
+	ofImage bannerOne, bannerTwo, playBn, homeBn;
+
+	float yOne, homeAlpha, playAlpha;
 	int homeX, homeY, homeRadius;
 
-	float oneOrigAspect, twoOrigAspect;
+	float oneAspect, twoAspect, bannerOneAspect, bannerTwoAspect;
 
 	int oneStill, twoStill;
 
