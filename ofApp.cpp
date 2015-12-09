@@ -9,7 +9,7 @@ void ofApp::setup() {
 
 	Tweenzor::init();
 
-	one.loadMovie("film.mov");
+	one.loadMovie("1.mov");
 	two.loadMovie("2.mov");
 
 	// hvis aspekt er vigtigt
@@ -25,21 +25,16 @@ void ofApp::setup() {
 	two.play();
 	two.setLoopState(OF_LOOP_NONE);
 
-	// filmene starter ud med at være på pause -- et still billede for brugeren.
+	// filmene som still billede for brugeren.
 	oneStill = 279;
 	twoStill = 265;
 	one.setFrame(oneStill);
 	two.setFrame(twoStill);
 
-	onePlaying = false;
-	twoPlaying = false;
 	screenHome = true;
 
-	one.setPaused(!onePlaying);
-	two.setPaused(!twoPlaying);
-
-	// font stuff
-	stdFont.loadFont("Menlo.ttc", 12);
+	one.setPaused(true);
+	two.setPaused(true);
 
 	// home button
 	homeX = ofGetWindowWidth() - 125;
@@ -57,7 +52,7 @@ void ofApp::update() {
 	Tweenzor::update(ofGetElapsedTimeMillis());
 
 	if (one.getIsMovieDone() || two.getIsMovieDone()) {
-		if (screenHome) {
+		if (!screenHome) {
 			homePressed();
 		}
 	}
@@ -82,56 +77,55 @@ void ofApp::draw() {
 	ofCircle(ofGetWindowWidth() / 2, ofGetWindowHeight() / 4, 100);
 	ofCircle(ofGetWindowWidth() / 2, ofGetWindowHeight() - (ofGetWindowHeight() / 4), 100);
 
-	/*
 	// debug
 	ofSetColor(255);
 	fpsStr = "frame rate: "+ofToString(ofGetFrameRate(), 2);
 	ofDrawBitmapString(fpsStr, 5, 13);
-	*/
 }
 
 //==============================================================
 void ofApp::oneStarted() {
 	screenHome = false;
+    
+    two.stop();
+    
 	Tweenzor::add(&playAlpha, playAlpha, 0.f, 0.f, 0.5f, EASE_IN_OUT_QUINT);
 	Tweenzor::add(&yOne, yOne, 0.f, 0.f, 0.5f, EASE_IN_OUT_QUINT);
 	Tweenzor::add(&homeAlpha, homeAlpha, 100.f, 0.f, 0.5f, EASE_IN_OUT_QUINT);
+    
 	yTwo = ofGetWindowHeight();
+    
 	one.setFrame(0);
+    two.setFrame(twoStill);
 	one.play();
-	onePlaying = true;
-
-	two.stop();
-	twoPlaying = false;
 }
 
 void ofApp::twoStarted() {
 	screenHome = false;
-	Tweenzor::add(&playAlpha, playAlpha, 0.f, 0.f, 0.5f, EASE_IN_OUT_QUINT);
+    
+    one.stop();
+
+    Tweenzor::add(&playAlpha, playAlpha, 0.f, 0.f, 0.5f, EASE_IN_OUT_QUINT);
 	Tweenzor::add(&yOne, yOne, 0.f - ofGetWindowHeight(), 0.f, 0.5f, EASE_IN_OUT_QUINT);
 	Tweenzor::add(&homeAlpha, homeAlpha, 100.f, 0.f, 0.5f, EASE_IN_OUT_QUINT);
+    
+    one.setFrame(oneStill);
 	two.setFrame(0);
 	two.play();
-	twoPlaying = true;
-
-	one.stop();
-	onePlaying = false;
 }
 
 void ofApp::homePressed() {
 	screenHome = true;
-	one.setFrame(oneStill);
+    
+    one.stop();
+    two.stop();
+    
+    Tweenzor::add(&yOne, yOne, 0.f - ofGetWindowHeight() / 2, 0.f, 0.5f, EASE_IN_OUT_QUINT);
+    Tweenzor::add(&homeAlpha, homeAlpha, 0.f, 0.f, 0.5f, EASE_IN_OUT_QUINT);
+    Tweenzor::add(&playAlpha, playAlpha, 100.f, 0.f, 0.5f, EASE_IN_OUT_QUINT);
+    
+    one.setFrame(oneStill);
 	two.setFrame(twoStill);
-
-	one.stop();
-	onePlaying = false;
-
-	two.stop();
-	twoPlaying = false;
-
-	Tweenzor::add(&yOne, yOne, 0.f - ofGetWindowHeight() / 2, 0.f, 0.5f, EASE_IN_OUT_QUINT);
-	Tweenzor::add(&homeAlpha, homeAlpha, 0.f, 0.f, 0.5f, EASE_IN_OUT_QUINT);
-	Tweenzor::add(&playAlpha, playAlpha, 100.f, 0.f, 0.5f, EASE_IN_OUT_QUINT);
 }
 
 void ofApp::exit() {
@@ -165,7 +159,7 @@ void ofApp::mousePressed(int x, int y, int button) {
 
 //--------------------------------------------------------------
 void ofApp::mouseReleased(int x, int y, int button) {
-	if (!onePlaying && !twoPlaying) {
+	if (!one.isPlaying() && !two.isPlaying()) {
 		if (y < ofGetWindowHeight() / 2) {
 			oneStarted();
 		}
@@ -173,7 +167,7 @@ void ofApp::mouseReleased(int x, int y, int button) {
 			twoStarted();
 		}
 	}
-	else if (onePlaying || twoPlaying) {
+	else if (one.isPlaying() || two.isPlaying()) {
 		if (x > homeX - homeRadius && x < homeX + homeRadius && y > homeY - homeRadius && y < homeY + homeRadius) {
 			homePressed();
 		}

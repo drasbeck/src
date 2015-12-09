@@ -1,7 +1,6 @@
 #pragma once
 
 #include "ofMain.h"
-#include "ofTrueTypeFont.h"
 #include "ofxTweenzor.h"
 #include "ofxHapPlayer.h"
 
@@ -40,15 +39,11 @@ public:
 
 	int oneStill, twoStill;
 
-	bool onePlaying;
-	bool twoPlaying;
-
 	bool screenHome;
 
 	void oneStarted();
 	void twoStarted();
 	void homePressed();
 
-	ofTrueTypeFont stdFont;
 	string fpsStr;
 };
