@@ -27,10 +27,10 @@ public:
 	void gotMessage(ofMessage msg);
 
 	//ofxHapPlayer one;
-	//ofxHapPlayer two;
+	ofxHapPlayer two;
 
 	ofVideoPlayer one;
-	ofVideoPlayer two;
+	//ofVideoPlayer two;
 
 	ofImage bannerOne, bannerTwo, playBn, homeBn;
 
@@ -38,8 +38,6 @@ public:
 	int homeX, homeY, homeRadius;
 
 	float oneAspect, twoAspect, bannerOneAspect, bannerTwoAspect;
-
-	int oneStill, twoStill;
 
 	bool screenHome;
 

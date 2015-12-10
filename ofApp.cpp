@@ -29,11 +29,6 @@ void ofApp::setup() {
 	// sætter filmenes y-pos
 	yOne = 0 - ofGetWindowHeight() / 2;
 
-	// filmene som still billede for brugeren.
-	oneStill = 280;
-	twoStill = 265;
-	one.setFrame(oneStill);
-	two.setFrame(twoStill);
 	one.play();
 	two.play();
     one.stop();
@@ -84,58 +79,58 @@ void ofApp::draw() {
 
 	// home button
 	ofSetColor(255, 255, 255, ceil(homeAlpha));
-	//ofCircle(homeX, homeY, homeRadius);
 	homeBn.draw(homeX - homeBn.getHeight() / 2, homeY - homeBn.getHeight() / 2);
 
 	// play buttons
 	ofSetColor(255, 255, 255, ceil(playAlpha));
-	//ofCircle(ofGetWindowWidth() / 2, ofGetWindowHeight() / 4, 100);
-	//ofCircle(ofGetWindowWidth() / 2, ofGetWindowHeight() - (ofGetWindowHeight() / 4), 100);
 	playBn.draw(ofGetWindowWidth() / 2 - playBn.getWidth() / 2, ofGetWindowHeight() / 4 - playBn.getHeight() / 2);
 	playBn.draw(ofGetWindowWidth() / 2 - playBn.getWidth() / 2, ofGetWindowHeight() - (ofGetWindowHeight() / 4) - playBn.getWidth() / 2);
 
-	/*
+	if (one.isPlaying()) {
+		ofSetColor(0, 0, 0, 75);
+		ofRect((ofGetWindowWidth() / 2) - ((ofGetWindowHeight() * oneAspect) / 2), ofGetWindowHeight() - 4, ofGetWindowHeight() * oneAspect, ofGetWindowHeight());
+		ofSetColor(255);
+		ofRect((ofGetWindowWidth() / 2) - ((ofGetWindowHeight() * oneAspect) / 2), ofGetWindowHeight() - 4, ofGetWindowHeight() * oneAspect * one.getCurrentFrame() / one.getTotalNumFrames(), ofGetWindowHeight());
+	}
+	if (two.isPlaying()) {
+		ofSetColor(0, 100);
+		ofRect((ofGetWindowWidth() / 2) - ((ofGetWindowHeight() * twoAspect) / 2), ofGetWindowHeight() - 4, ofGetWindowHeight() * twoAspect, ofGetWindowHeight());
+		ofSetColor(255, 200);
+		ofRect((ofGetWindowWidth() / 2) - ((ofGetWindowHeight() * twoAspect) / 2), ofGetWindowHeight() - 4, ofGetWindowHeight() * twoAspect * two.getCurrentFrame() / two.getTotalNumFrames(), ofGetWindowHeight());
+	}
+	
 	// debug
-	ofSetColor(255);
-	fpsStr = "frame rate: "+ofToString(ofGetFrameRate(), 2);
-	ofDrawBitmapString(fpsStr, 5, 13);
-	*/
+	//ofSetColor(255);
+	//fpsStr = "frame rate: " + ofToString(ofGetFrameRate(), 2);
+	//ofDrawBitmapString(fpsStr, 5, 13);
 }
 
 //==============================================================
 void ofApp::oneStarted() {
 	screenHome = false;
     
-    two.stop();
-    
 	Tweenzor::add(&playAlpha, playAlpha, 0.f, 0.f, 0.5f, EASE_IN_OUT_QUINT);
 	Tweenzor::add(&yOne, yOne, 0.f, 0.f, 0.5f, EASE_IN_OUT_QUINT);
 	Tweenzor::add(&homeAlpha, homeAlpha, 200.f, 0.f, 0.5f, EASE_IN_OUT_QUINT);
     
-	one.setFrame(0);
-    two.setFrame(twoStill);
 	one.play();
 }
 
 void ofApp::twoStarted() {
 	screenHome = false;
-    
-    one.stop();
 
     Tweenzor::add(&playAlpha, playAlpha, 0.f, 0.f, 0.5f, EASE_IN_OUT_QUINT);
 	Tweenzor::add(&yOne, yOne, 0.f - ofGetWindowHeight(), 0.f, 0.5f, EASE_IN_OUT_QUINT);
 	Tweenzor::add(&homeAlpha, homeAlpha, 200.f, 0.f, 0.5f, EASE_IN_OUT_QUINT);
     
-    one.setFrame(oneStill);
-	two.setFrame(0);
 	two.play();
 }
 
 void ofApp::homePressed() {
 	screenHome = true;
     
-//    one.stop();
-//    two.stop();
+    one.stop();
+	two.stop();
     
     Tweenzor::add(&yOne, yOne, 0.f - ofGetWindowHeight() / 2, 0.f, 0.5f, EASE_IN_OUT_QUINT);
     Tweenzor::addCompleteListener(Tweenzor::getTween(&yOne), this, &ofApp::onComplete);
@@ -144,11 +139,9 @@ void ofApp::homePressed() {
 }
 
 void ofApp::onComplete(float* arg) {
-	one.setFrame(oneStill);
-//    one.play();
+	one.setFrame(0);
 	one.stop();
-	two.setFrame(twoStill);
-//	two.play();
+	two.setFrame(0);
 	two.stop();
 
 }
