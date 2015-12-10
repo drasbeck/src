@@ -27,7 +27,8 @@ void ofApp::setup() {
 	bannerTwoAspect = bannerTwo.getWidth() / bannerTwo.getHeight();
 
 	// sætter filmenes y-pos
-	yOne = 0 - ofGetWindowHeight() / 2;
+	yOne = 0;
+	yTarget = ofGetWindowHeight() / 2;
 
 	one.play();
 	two.play();
@@ -36,14 +37,14 @@ void ofApp::setup() {
     
 	// home button
 	screenHome = true;
-	homeBn.loadImage("homeBn.png");
+	homeButton.loadImage("homeButton.png");
 	homeX = ofGetWindowWidth() - 125;
 	homeY = ofGetWindowHeight() - 125;
 	homeRadius = 100;
 
 	// play button
 	playAlpha = 200.f;
-	playBn.loadImage("playBn.png");
+	playButton.loadImage("playButton.png");
 }
 
 //--------------------------------------------------------------
@@ -67,32 +68,32 @@ void ofApp::draw() {
 	// filmen og animationen opdateres
 	ofSetColor(255);
 	if (!one.isPlaying() && !two.isPlaying()) {
-		bannerOne.draw((ofGetWindowWidth() / 2) - ((ofGetWindowHeight() / 2 * bannerOneAspect) / 2), yOne + ofGetWindowHeight() / 2, ofGetWindowHeight() / 2 * bannerOneAspect, yOne + ofGetWindowHeight());
-		bannerTwo.draw((ofGetWindowWidth() / 2) - ((ofGetWindowHeight() / 2 * bannerTwoAspect) / 2), yOne + ofGetWindowHeight(), ofGetWindowHeight() / 2 * bannerOneAspect, yOne + ofGetWindowHeight());
+		bannerOne.draw(0, yOne);
+		bannerTwo.draw(0, yOne + ofGetWindowHeight() / 2);
 	} else if (one.isPlaying() && !two.isPlaying()) {
-		one.draw((ofGetWindowWidth() / 2) - ((ofGetWindowHeight() * oneAspect) / 2), yOne, ofGetWindowHeight() * oneAspect, ofGetWindowHeight());
-		bannerTwo.draw((ofGetWindowWidth() / 2) - ((ofGetWindowHeight() / 2 * bannerTwoAspect) / 2), yOne + ofGetWindowHeight(), ofGetWindowHeight() / 2 * bannerOneAspect, yOne + ofGetWindowHeight());
+		one.draw((ofGetWindowWidth() / 2) - ((ofGetWindowHeight() * oneAspect) / 2), yOne - ofGetWindowHeight() / 2, ofGetWindowHeight() * oneAspect, ofGetWindowHeight());
+		bannerTwo.draw(0, yOne + ofGetWindowHeight() / 2);
 	} else if (!one.isPlaying() && two.isPlaying()) {
-		bannerOne.draw((ofGetWindowWidth() / 2) - ((ofGetWindowHeight() / 2 * bannerOneAspect) / 2), yOne + ofGetWindowHeight() / 2, ofGetWindowHeight() / 2 * bannerOneAspect, yOne + ofGetWindowHeight());
-		two.draw((ofGetWindowWidth() / 2) - ((ofGetWindowHeight() * twoAspect) / 2), yOne + ofGetWindowHeight(), ofGetWindowHeight() * twoAspect, ofGetWindowHeight());
+		bannerOne.draw(0, yOne);
+		two.draw((ofGetWindowWidth() / 2) - ((ofGetWindowHeight() * twoAspect) / 2), yOne + ofGetWindowHeight() / 2, ofGetWindowHeight() * twoAspect, ofGetWindowHeight());
 	}
 
 	// home button
 	ofSetColor(255, 255, 255, ceil(homeAlpha));
-	homeBn.draw(homeX - homeBn.getHeight() / 2, homeY - homeBn.getHeight() / 2);
+	homeButton.draw(homeX - homeButton.getHeight() / 2, homeY - homeButton.getHeight() / 2);
 
 	// play buttons
 	ofSetColor(255, 255, 255, ceil(playAlpha));
-	playBn.draw(ofGetWindowWidth() / 2 - playBn.getWidth() / 2, ofGetWindowHeight() / 4 - playBn.getHeight() / 2);
-	playBn.draw(ofGetWindowWidth() / 2 - playBn.getWidth() / 2, ofGetWindowHeight() - (ofGetWindowHeight() / 4) - playBn.getWidth() / 2);
+	playButton.draw(ofGetWindowWidth() / 2 - playButton.getWidth() / 2, ofGetWindowHeight() / 4 - playButton.getHeight() / 2);
+	playButton.draw(ofGetWindowWidth() / 2 - playButton.getWidth() / 2, ofGetWindowHeight() - (ofGetWindowHeight() / 4) - playButton.getWidth() / 2);
 
-	if (one.isPlaying()) {
+	if (one.isPlaying() && !screenHome) {
 		ofSetColor(0, 0, 0, 75);
 		ofRect((ofGetWindowWidth() / 2) - ((ofGetWindowHeight() * oneAspect) / 2), ofGetWindowHeight() - 4, ofGetWindowHeight() * oneAspect, ofGetWindowHeight());
 		ofSetColor(255);
 		ofRect((ofGetWindowWidth() / 2) - ((ofGetWindowHeight() * oneAspect) / 2), ofGetWindowHeight() - 4, ofGetWindowHeight() * oneAspect * one.getCurrentFrame() / one.getTotalNumFrames(), ofGetWindowHeight());
 	}
-	if (two.isPlaying()) {
+	if (two.isPlaying() && !screenHome) {
 		ofSetColor(0, 100);
 		ofRect((ofGetWindowWidth() / 2) - ((ofGetWindowHeight() * twoAspect) / 2), ofGetWindowHeight() - 4, ofGetWindowHeight() * twoAspect, ofGetWindowHeight());
 		ofSetColor(255, 200);
@@ -108,9 +109,11 @@ void ofApp::draw() {
 //==============================================================
 void ofApp::oneStarted() {
 	screenHome = false;
-    
+    if (yTarget < 0) {
+		yTarget *= -1;
+	}
 	Tweenzor::add(&playAlpha, playAlpha, 0.f, 0.f, 0.5f, EASE_IN_OUT_QUINT);
-	Tweenzor::add(&yOne, yOne, 0.f, 0.f, 0.5f, EASE_IN_OUT_QUINT);
+	Tweenzor::add(&yOne, yOne, yTarget, 0.f, 0.5f, EASE_IN_OUT_QUINT);
 	Tweenzor::add(&homeAlpha, homeAlpha, 200.f, 0.f, 0.5f, EASE_IN_OUT_QUINT);
     
 	one.play();
@@ -118,9 +121,11 @@ void ofApp::oneStarted() {
 
 void ofApp::twoStarted() {
 	screenHome = false;
-
+	if (yTarget > 0) {
+		yTarget *= -1;
+	}
     Tweenzor::add(&playAlpha, playAlpha, 0.f, 0.f, 0.5f, EASE_IN_OUT_QUINT);
-	Tweenzor::add(&yOne, yOne, 0.f - ofGetWindowHeight(), 0.f, 0.5f, EASE_IN_OUT_QUINT);
+	Tweenzor::add(&yOne, yOne, yTarget, 0.f, 0.5f, EASE_IN_OUT_QUINT);
 	Tweenzor::add(&homeAlpha, homeAlpha, 200.f, 0.f, 0.5f, EASE_IN_OUT_QUINT);
     
 	two.play();
@@ -128,22 +133,18 @@ void ofApp::twoStarted() {
 
 void ofApp::homePressed() {
 	screenHome = true;
-    
-    one.stop();
-	two.stop();
-    
-    Tweenzor::add(&yOne, yOne, 0.f - ofGetWindowHeight() / 2, 0.f, 0.5f, EASE_IN_OUT_QUINT);
+
+    Tweenzor::add(&yOne, yOne, 0.f, 0.f, 0.5f, EASE_IN_OUT_QUINT);
     Tweenzor::addCompleteListener(Tweenzor::getTween(&yOne), this, &ofApp::onComplete);
     Tweenzor::add(&homeAlpha, homeAlpha, 0.f, 0.f, 0.5f, EASE_IN_OUT_QUINT);
-    Tweenzor::add(&playAlpha, playAlpha, 200.f, 0.f, 0.5f, EASE_IN_OUT_QUINT);
 }
 
 void ofApp::onComplete(float* arg) {
+    Tweenzor::add(&playAlpha, playAlpha, 200.f, 0.f, 0.5f, EASE_IN_OUT_QUINT);
 	one.setFrame(0);
-	one.stop();
 	two.setFrame(0);
+	one.stop();
 	two.stop();
-
 }
 
 void ofApp::exit() {
