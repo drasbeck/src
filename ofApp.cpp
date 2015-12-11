@@ -112,7 +112,7 @@ void ofApp::oneStarted() {
     if (yTarget < 0) {
 		yTarget *= -1;
 	}
-	Tweenzor::add(&playAlpha, playAlpha, 0.f, 0.f, 0.5f, EASE_IN_OUT_QUINT);
+	Tweenzor::add(&playAlpha, playAlpha, 0.f, 0.f, 0.5f, EASE_IN_OUT_ELASTIC);
 	Tweenzor::add(&yOne, yOne, yTarget, 0.f, 0.5f, EASE_IN_OUT_QUINT);
 	Tweenzor::add(&homeAlpha, homeAlpha, 200.f, 0.f, 0.5f, EASE_IN_OUT_QUINT);
     
@@ -124,7 +124,7 @@ void ofApp::twoStarted() {
 	if (yTarget > 0) {
 		yTarget *= -1;
 	}
-    Tweenzor::add(&playAlpha, playAlpha, 0.f, 0.f, 0.5f, EASE_IN_OUT_QUINT);
+    Tweenzor::add(&playAlpha, playAlpha, 0.f, 0.f, 0.5f, EASE_IN_OUT_ELASTIC);
 	Tweenzor::add(&yOne, yOne, yTarget, 0.f, 0.5f, EASE_IN_OUT_QUINT);
 	Tweenzor::add(&homeAlpha, homeAlpha, 200.f, 0.f, 0.5f, EASE_IN_OUT_QUINT);
     
@@ -136,7 +136,7 @@ void ofApp::homePressed() {
 
     Tweenzor::add(&yOne, yOne, 0.f, 0.f, 0.5f, EASE_IN_OUT_QUINT);
     Tweenzor::addCompleteListener(Tweenzor::getTween(&yOne), this, &ofApp::onComplete);
-    Tweenzor::add(&homeAlpha, homeAlpha, 0.f, 0.f, 0.5f, EASE_IN_OUT_QUINT);
+    Tweenzor::add(&homeAlpha, homeAlpha, 0.f, 0.f, 0.5f, EASE_IN_OUT_ELASTIC);
 }
 
 void ofApp::onComplete(float* arg) {

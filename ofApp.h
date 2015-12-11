@@ -26,10 +26,10 @@ public:
 	void dragEvent(ofDragInfo dragInfo);
 	void gotMessage(ofMessage msg);
 
-	//ofxHapPlayer one;
+	ofxHapPlayer one;
 	ofxHapPlayer two;
 
-	ofVideoPlayer one;
+	//ofVideoPlayer one;
 	//ofVideoPlayer two;
 
 	ofImage bannerOne, bannerTwo, playButton, homeButton;
